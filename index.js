@@ -14,8 +14,8 @@ const io = new Server(server, {
   },
 });
 
-app.get("/", (req,res) => res.send('healthy'));
 app.use(cors());
+app.get("/", (req,res) => res.send('healthy'));
 app.use(express.json());
 
 
@@ -61,3 +61,4 @@ io.on("connection", (socket) => {
 server.listen(port, () => {
   console.log("Server is running at:", port);
 });
+
