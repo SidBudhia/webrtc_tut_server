@@ -26,30 +26,32 @@ io.on("connection", (socket) => {
   console.log("Socket Connected", socket.id);
 
   socket.on("room:join", (data) => {
-    console.log(data);
+    console.log("room:join", data);
     const { email, room } = data;
     emailToSocketidMap.set(email, socket.id);
     socketidToEmailMap.set(socket.id, email);
     io.to(room).emit("user:joined", { email, id: socket.id });
     socket.join(room);
-    socket.emit("room:join", data); // socket.emit trigger emit func the same socket
+    socket.emit("room:joined", data); // socket.emit trigger emit func the same socket
   });
 
   socket.on('user:call', ({to, offer}) => {
+    console.log("user:call offer:", offer);
     io.to(to).emit('incoming:call', {from:socket.id, offer});
   });
 
   socket.on('call:accepted', ({to, ans}) => {
+    console.log("call:accepted ans:", ans);
     io.to(to).emit('call:accepted', {from:socket.id, ans});
   });
 
   socket.on("peer:nego:needed", ({ to, offer }) => {
-    // console.log("peer:nego:needed", offer);
+    console.log("peer:nego:needed offer:", offer);
     io.to(to).emit("peer:nego:needed", { from: socket.id, offer });
   });
 
   socket.on("peer:nego:done", ({ to, ans }) => {
-    // console.log("peer:nego:done", ans);
+    console.log("peer:nego:done ans:", ans);
     io.to(to).emit("peer:nego:final", { from: socket.id, ans });
   });
 
